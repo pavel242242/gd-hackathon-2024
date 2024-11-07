@@ -1,4 +1,6 @@
 import streamlit as st
+import requests
+import json
 from gooddata_sdk import GoodDataSdk, CatalogDataSourceSnowflake, SnowflakeAttributes, BasicCredentials, CatalogGenerateLdmRequest
 
 
@@ -118,16 +120,38 @@ if st.checkbox("Show Data Models"):
         except Exception as e:
             st.error(f"Error fetching data model: {e}")
 
-# Browse GoodData Visualizations
-if st.checkbox("Show Visualizations"):
-    selected_workspace_for_viz = st.selectbox(
-        "Select Workspace for Visualizations", options=[ws.id for ws in workspaces]
-    )
-    if selected_workspace_for_viz:
-        st.subheader(f"Visualizations in Workspace: {selected_workspace_for_viz}")
+# AI Visualization Generator
+if st.checkbox("AI Visualization Generator"):
+    st.subheader("Generate Visualization using AI")
+    
+    # Text input for the question
+    user_question = st.text_input("Enter your visualization question:", 
+                                 placeholder="E.g., create visualization how many jobs were run year by year?")
+    
+    if user_question and st.button("Generate Visualization"):
         try:
-            visualizations = sdk.insights.list_insights(selected_workspace_for_viz)
-            for viz in visualizations:
-                st.write(f"- ID: {viz.id}, Title: {viz.title}")
+            url = f"{gd_host}/api/v1/actions/workspaces/gd_hackaton/ai/chat"
+            
+            payload = {
+                "question": user_question,
+                "deepSearch": True,
+                "objectTypes": ["attribute", "fact"]
+            }
+            
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': f"Bearer {gd_token}"
+            }
+            
+            response = requests.post(url, headers=headers, json=payload)
+            
+            if response.status_code == 200:
+                st.success("Visualization generated successfully!")
+                st.json(response.json())
+            else:
+                st.error(f"Failed to generate visualization: {response.text}")
+                
         except Exception as e:
-            st.error(f"Error fetching visualizations: {e}")
+            st.error(f"Error occurred: {e}")
+
