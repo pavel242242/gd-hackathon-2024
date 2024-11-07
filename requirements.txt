@@ -1,3 +1,5 @@
 keboola_streamlit
 streamlit
 gooddata-sdk
+requests
+gooddata_pandas

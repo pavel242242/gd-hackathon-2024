@@ -1,5 +1,8 @@
 import streamlit as st
-from gooddata_sdk import GoodDataSdk, CatalogDataSourceSnowflake, SnowflakeAttributes, BasicCredentials, CatalogGenerateLdmRequest
+from gooddata_sdk import GoodDataSdk, CatalogDataSourceSnowflake, SnowflakeAttributes, BasicCredentials, CatalogGenerateLdmRequest,ExecutionDefinition,Attribute,SimpleMetric,ObjId, TableDimension
+import requests
+import json
+from gooddata_pandas import GoodPandas
 
 
 # Initialize GoodData SDK using API token and host from secrets
@@ -131,3 +134,89 @@ if st.checkbox("Show Visualizations"):
                 st.write(f"- ID: {viz.id}, Title: {viz.title}")
         except Exception as e:
             st.error(f"Error fetching visualizations: {e}")
+
+# AI Visualization Generator
+if st.checkbox("AI Visualization Generator"):
+    st.subheader("Generate Visualization using AI")
+    
+    # Text input for the question
+    user_question = st.text_input("Enter your visualization question:", 
+                                 placeholder="E.g., create visualization how many jobs were run year by year?")
+    
+    if user_question and st.button("Generate Visualization"):
+        try:
+            url = f"{gd_host}/api/v1/actions/workspaces/gd_hackaton/ai/chat"
+            
+            payload = {
+                "question": user_question,
+                "deepSearch": True,
+                "objectTypes": ["attribute", "fact"]
+            }
+            
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': f"Bearer {gd_token}"
+            }
+            
+            response = requests.post(url, headers=headers, json=payload)
+            
+            if response.status_code == 200:
+                st.success("Visualization generated successfully!")
+                response_data = response.json()
+                
+                # Store the response in Streamlit's session state
+                st.session_state["response_data"] = response_data
+                
+                # Display the response JSON
+                st.json(response_data)
+            else:
+                st.error(f"Failed to generate visualization: {response.text}")
+                
+        except Exception as e:
+            st.error(f"Error occurred: {e}")
+
+# Additional code block that uses elements from the response JSON
+if "response_data" in st.session_state:
+    response_data = st.session_state["response_data"]
+    
+    # Extract the specific elements from the response
+    try:
+        gp = GoodPandas(gd_host, gd_token)
+        frames = gp.data_frames("gd_hackaton")
+        metric_id = response_data["createdVisualizations"]["objects"][0]["metrics"][0]["id"]
+        agg_func = response_data["createdVisualizations"]["objects"][0]["metrics"][0]["aggFunction"]
+        dimensionality_id = response_data["createdVisualizations"]["objects"][0]["dimensionality"][0]["id"]
+
+    #   #  df = frames.for_items(
+    #         items=dict(
+    #             first_metric=f'metric/{metric_id}',
+    #             first_dimension=f'label/{dimensionality_id}'
+    #         )
+    #     )
+        exec_def = ExecutionDefinition(
+            attributes=[
+                Attribute(local_id=dimensionality_id, label=dimensionality_id)
+            ],
+            metrics=[
+                SimpleMetric(local_id=metric_id, item=ObjId(id=metric_id, type="attribute"),aggregation=agg_func)
+            ],
+            filters=[],
+            #dimensions=[[dimensionality_id], [ "measureGroup"]],
+            dimensions=[TableDimension(item_ids=[dimensionality_id,"measureGroup"])],
+        )
+        df, df_metadata = frames.for_exec_def(exec_def=exec_def)
+    
+    # Display or further process `df` as needed
+        st.write(df)
+
+        st.session_state["metric_id"] = metric_id
+        st.session_state["dimensionality_id"] = dimensionality_id
+
+        st.write("Metric ID:", st.session_state["metric_id"])
+        st.write("Dimensionality ID:", st.session_state["dimensionality_id"])
+
+    except KeyError as e:
+        st.error(f"KeyError: {e}")
+
+
