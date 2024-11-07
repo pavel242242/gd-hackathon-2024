@@ -31,7 +31,7 @@ if st.checkbox("Show Data Sources"):
         data_sources = sdk.catalog_data_source.list_data_sources()
         for data_source in data_sources:
             st.write(f"- ID: {data_source.id}, Name: {data_source.name}")
-            if st.button("Save PDM", key = data_source.id):
+            if st.button("Save data source to PDM and gd_hackaton workspace", key = data_source.id):
                 x = sdk.catalog_data_source.scan_data_source(data_source_id=data_source.id)
                 #st.write(x)
                 logical_model = sdk.catalog_data_source.generate_logical_model(data_source_id=data_source.id,generate_ldm_request= CatalogGenerateLdmRequest(pdm=x.pdm,grain_prefix='gr', reference_prefix='r', fact_prefix='f'))
