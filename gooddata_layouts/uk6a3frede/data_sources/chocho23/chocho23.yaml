@@ -1,0 +1,7 @@
+id: chocho23
+name: chocho23
+permissions: []
+schema: PUBLIC
+type: SNOWFLAKE
+url: jdbc:snowflake://gn56074.west-europe.azure.snowflakecomputing.com:443/?application=GoodData_GoodDataCloud&db=COURSES&warehouse=COMPUTE_WH
+username: sadmin

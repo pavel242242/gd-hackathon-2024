@@ -1,0 +1,12 @@
+cacheStrategy: ALWAYS
+id: 42a08afa-3c16-4b94-b5b7-c865a1ca63b2
+name: internal_reporting_data
+permissions:
+  - assignee:
+      id: gooddata_internal_reporting_users
+      type: userGroup
+    name: USE
+schema: LOOKER_MAIN
+type: SNOWFLAKE
+url: jdbc:snowflake://rl74503-keboola-internal-data.snowflakecomputing.com:443/?application=GoodData_GoodDataCloud&db=INTERNAL_REPORTING&warehouse=INTERNAL_REPORTING
+username: LOOKER_MAIN

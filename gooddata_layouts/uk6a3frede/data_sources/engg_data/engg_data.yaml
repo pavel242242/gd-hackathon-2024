@@ -1,0 +1,16 @@
+cacheStrategy: ALWAYS
+id: engg_data
+name: engg_data
+permissions:
+  - assignee:
+      id: gooddata_engineering_developers
+      type: userGroup
+    name: MANAGE
+  - assignee:
+      id: gooddata_engineering_users
+      type: userGroup
+    name: USE
+schema: WORKSPACE_6422472
+type: SNOWFLAKE
+url: jdbc:snowflake://rl74503-com-keboola-gcp-us-east4.snowflakecomputing.com:443/?application=GoodData_GoodDataCloud&db=KBC_USE4_114&warehouse=KEBOOLA_SMALL
+username: KBC_USE4_WORKSPACE_6422472

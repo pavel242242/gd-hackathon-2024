@@ -1,0 +1,64 @@
+cacheStrategy: ALWAYS
+id: 2bdb412d-a405-409d-b1bf-918bb7598e96
+name: gd_main
+permissions:
+  - assignee:
+      id: gooddata_clientservices_developers
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_sales_developers
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_clientservices_users
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_operations_developers
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_finance_developers
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_finance_users
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_marketing_developers
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_marketing_users
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_operations_users
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_product_developers
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_product_users
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_sales_users
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_engineering_developers
+      type: userGroup
+    name: USE
+  - assignee:
+      id: gooddata_engineering_users
+      type: userGroup
+    name: USE
+schema: GD_MAIN
+type: SNOWFLAKE
+url: jdbc:snowflake://rl74503-keboola-internal-data.snowflakecomputing.com:443/?application=GoodData_GoodDataCloud&db=INTERNAL_REPORTING&warehouse=INTERNAL_REPORTING
+username: LOOKER_MAIN

@@ -1,0 +1,3 @@
+keboola_streamlit
+streamlit
+gooddata-sdk
