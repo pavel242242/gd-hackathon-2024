@@ -34,7 +34,7 @@ if st.checkbox("Show Data Sources"):
             if st.button("Save PDM", key = data_source.id):
                 x = sdk.catalog_data_source.scan_data_source(data_source_id=data_source.id)
                 #st.write(x)
-                logical_model = sdk.catalog_data_source.generate_logical_model(data_source_id=data_source.id,generate_ldm_request= CatalogGenerateLdmRequest(pdm=x.pdm))
+                logical_model = sdk.catalog_data_source.generate_logical_model(data_source_id=data_source.id,generate_ldm_request= CatalogGenerateLdmRequest(pdm=x.pdm,grain_prefix='gr', reference_prefix='r', fact_prefix='f'))
                 st.write('logical_model:')
                 st.write("Succesfully read")
                 try:
